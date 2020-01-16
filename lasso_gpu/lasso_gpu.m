@@ -38,7 +38,7 @@ else
     
 end
 
-%% test
+
 %% get sizes 
 
 N_i = size(X,1);
