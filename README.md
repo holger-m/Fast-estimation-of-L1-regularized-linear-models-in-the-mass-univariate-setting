@@ -1,4 +1,4 @@
-# Fast-estimation-of-L1-regularized-linear-models-in-the-mass-univariate-setting
+# Fast estimation of L1-regularized linear models in the mass-univariate setting
 
 Functions and code described in the bioRxiv preprint Mohr and Ruge, 2020: Fast estimation of L1-regularized linear models in the mass-univariate setting
 
