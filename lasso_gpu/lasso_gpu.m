@@ -39,7 +39,7 @@ else
 end
 
 
-%% get sizes
+%% get sizes 
 
 N_i = size(X,1);
 N_j = size(X,2);
