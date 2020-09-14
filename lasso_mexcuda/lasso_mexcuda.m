@@ -41,6 +41,7 @@ end
 
 %% get sizes
 
+N_i_double = size(X,1);
 N_i = int32(size(X,1));
 N_j = int32(size(X,2));
 N_j_y = int32(size(Y,2));
@@ -51,15 +52,11 @@ lambda_seq = single(lambda_seq);
 
 %% convert to Boyd specs
 
-boyd_factor = sqrt(size(X,1));
-
-A = X/boyd_factor;
+A = X;
 b = Y;
 
 clear X
 clear Y
-
-boyd_factor = single(boyd_factor);
 
 
 %% precompute Cholesky etc.
@@ -68,7 +65,7 @@ B0 = mean(b);
 
 b = b - repmat(B0, N_i, 1);
 
-Atb = A'*b;
+Atb = A'*b/N_i_double;
 
 Atb = single(Atb);
 
@@ -76,9 +73,7 @@ over_flag = N_j > N_i;
 
 if over_flag
     
-    L = chol(eye(N_i) + (A*A'), 'lower');
-    
-    At_LU_inv = A'/(L*L');
+    At_LU_inv = (A'/(eye(N_i) + (A*A')/N_i_double))/N_i_double;
     
     At_LU_inv = reshape(At_LU_inv, N_i*N_j, 1);
     
@@ -86,9 +81,7 @@ if over_flag
     
 else
     
-    L = chol(A'*A + eye(N_j), 'lower');
-    
-    LU_inv = inv(L*L');
+    LU_inv = inv((A'*A)/N_i_double + eye(N_j));
     
     LU_inv = reshape(LU_inv, N_j*N_j, 1);
     
@@ -142,7 +135,7 @@ for batch_no = 1:N_batches
 
     for lambda_no = 1:N_lambda
 
-        lambda_value = boyd_factor*lambda_seq(1,lambda_no);
+        lambda_value = lambda_seq(1,lambda_no);
 
         if lambda_no == 1
 
@@ -192,5 +185,3 @@ for batch_no = 1:N_batches
     end
 
 end
-
-B = B/boyd_factor;
