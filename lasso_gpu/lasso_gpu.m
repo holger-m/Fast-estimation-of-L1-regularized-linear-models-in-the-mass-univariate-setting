@@ -39,7 +39,7 @@ else
 end
 
 
-%% get sizes 
+%% get sizes
 
 N_i = size(X,1);
 N_j = size(X,2);
@@ -51,15 +51,11 @@ lambda_seq = single(lambda_seq);
 
 %% convert to Boyd specs
 
-boyd_factor = sqrt(size(X,1));
-
-A = X/boyd_factor;
+A = X;
 b = Y;
 
 clear X
 clear Y
-
-boyd_factor = single(boyd_factor);
 
 
 %% precompute Cholesky etc.
@@ -68,7 +64,7 @@ B0 = mean(b);
 
 b = b - repmat(B0, N_i, 1);
 
-Atb = A'*b;
+Atb = A'*b/N_i;
 
 Atb = single(Atb);
 
@@ -76,17 +72,13 @@ over_flag = N_j > N_i;
 
 if over_flag
     
-    L = chol(eye(N_i) + (A*A'), 'lower');
-    
-    At_LU_inv = A'/(L*L');
+    At_LU_inv = (A'/(eye(N_i) + (A*A')/N_i))/N_i;
     
     At_LU_inv = single(At_LU_inv);
     
 else
     
-    L = chol(A'*A + eye(N_j), 'lower');
-    
-    LU_inv = inv(L*L');
+    LU_inv = inv((A'*A)/N_i + eye(N_j));
     
     LU_inv = single(LU_inv);
     
@@ -153,7 +145,7 @@ for batch_no = 1:N_batches
 
     for lambda_no = 1:N_lambda
 
-        lambda_value = boyd_factor*lambda_seq(1,lambda_no);
+        lambda_value = lambda_seq(1,lambda_no);
 
         lambda_value_gpu = gpuArray(lambda_value);
 
@@ -209,7 +201,5 @@ for batch_no = 1:N_batches
     end
 
 end
-
-B = B/boyd_factor;
 
 reset(D);
