@@ -1,6 +1,6 @@
 # Fast estimation of L1-regularized linear models in the mass-univariate setting
 
-Functions and code are described in Mohr and Ruge, 2020: Fast estimation of L1-regularized linear models in the mass-univariate setting. Neuroinformatics
+Functions and code are described in Mohr and Ruge, 2020: Fast estimation of L1-regularized linear models in the mass-univariate setting. *Neuroinformatics*
 
 https://doi.org/10.1007/s12021-020-09489-1 
 
